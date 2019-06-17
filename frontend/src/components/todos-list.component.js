@@ -1,17 +1,27 @@
 import React, { Component } from "react";
 import axios from "axios";
-import Link from "react-router-dom";
+import { Link } from "react-router-dom";
 
 // child component as a functional component TODO for the todolist
 const Todo = props => {
-  <tr>
-    <td>{props.todo.todo_description}</td>
-    <td>{props.todo.todo_responsible}</td>
-    <td>{props.todo.todo_priority}</td>
-    <td>
-      <Link to={"/edit/" + props.todo._id}>edit</Link>
-    </td>
-  </tr>;
+  return (
+    <React.Fragment>
+      <tr>
+        <td className={props.todo.todo_completed ? "completed" : ""}>
+          {props.todo.todo_description}
+        </td>
+        <td className={props.todo.todo_completed ? "completed" : ""}>
+          {props.todo.todo_responsible}
+        </td>
+        <td className={props.todo.todo_completed ? "completed" : ""}>
+          {props.todo.todo_priority}
+        </td>
+        <td>
+          <Link to={"/edit/" + props.todo._id}>edit</Link>
+        </td>
+      </tr>
+    </React.Fragment>
+  );
 };
 
 export default class TodosList extends Component {
