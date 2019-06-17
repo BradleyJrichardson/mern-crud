@@ -10,6 +10,7 @@ let Todo = require("./todo.model");
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/todos", todoRoutes);
+// http://localhost:4000/todos/add for example
 
 app.listen(PORT, () => {
   console.log("server is running on port: " + PORT);
@@ -43,5 +44,37 @@ todoRoutes.route("/:id").get((req, res) => {
     } else {
       res.json(todo);
     }
+  });
+});
+
+// adding a todo
+todoRoutes.route("/add").post((req, res) => {
+  let todo = new Todo(req.body);
+  todo
+    .save()
+    .then(todo => {
+      res.status(200).json({ todo: "todo added" });
+    })
+    .catch(err => {
+      res.status(400).send("failed to add todo");
+    });
+});
+
+todoRoutes.route("/update/:id").post(function(req, res) {
+  Todo.findById(req.params.id, function(err, todo) {
+    if (!todo) res.status(404).send("data is not found");
+    else todo.todo_description = req.body.todo_description;
+    todo.todo_responsible = req.body.todo_responsible;
+    todo.todo_priority = req.body.todo_priority;
+    todo.todo_completed = req.body.todo_completed;
+
+    todo
+      .save()
+      .then(todo => {
+        res.json("Todo updated");
+      })
+      .catch(err => {
+        res.status(400).send("Update not possible");
+      });
   });
 });
